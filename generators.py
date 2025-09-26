@@ -7,9 +7,13 @@ client = AsyncOpenAI(
     timeout=60.0
 )
 
-async def create_response(text: str): 
-    response = await client.chat.completions.create(
-        model="openai/gpt-oss-20b",
-        messages=[{"role": "user", "content": text}],
-    )
-    return response.choices[0].message.content
+async def create_response(messages):
+    try:
+        response = await client.chat.completions.create(
+            model="google/gemma-3-12b",
+            messages=messages
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"OpenAI API Error: {e}")
+        raise
